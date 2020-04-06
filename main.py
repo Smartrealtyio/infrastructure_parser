@@ -16,16 +16,20 @@ class InfrastructureParser:
         print(building)
         objects_counts = []
         for object_type in self.objects:
-            for radius_value in rad_intervals:
-                response = requests.get(self.query, params={
-                    'text': object_type,
-                    'll': '{lon},{lat}'.format(lon=building['longitude'], lat=building['latitude']),
-                    'spn': '{lon_rad},{lat_rad}'.format(
-                        lon_rad=longitude_rad * radius_value,
-                        lat_rad=latitude_rad * latitude_rad)
-                })
-                object_count = len(json.loads(response.content.decode())['features'])
+            for radius_value in radius_values:
+                params = {
+                    'q': object_type,
+                    'in': 'circle:{lat},{lon};r={radius}'.format(lat=building['latitude'], lon=building['longitude'],
+                                                                 radius=radius_value),
+                    'limit': 100
+                }
+                print(params)
+                response = requests.get(self.query, params=params)
+                print(json.loads(response.content.decode())['items'])
+                object_count = len(json.loads(response.content.decode())['items'])
                 objects_counts.append(object_count)
+
+        return objects_counts
 
     def start(self):
         iter_count = 0
@@ -34,10 +38,11 @@ class InfrastructureParser:
             parsed_info = []
             for building in buildings:
                 objects_counts = self.parse(building)
-                parsed_info.append(objects_counts)
+                parsed_info.append({building['id']: objects_counts})
                 print(parsed_info)
-                iter_count += len(self.objects) * len(rad_intervals)
+                iter_count += len(self.objects) * len(radius_values)
             self.db.save_flats(parsed_info)
+            print(parsed_info)
 
 
 if __name__ == '__main__':
