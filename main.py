@@ -1,5 +1,7 @@
 import requests
 import json
+import traceback
+import sys
 
 from settings_local import *
 from queries import QueryMaker
@@ -24,10 +26,13 @@ class InfrastructureParser:
                     'limit': 100
                 }
                 print(params)
-                response = requests.get(self.query, params=params)
-                print(json.loads(response.content.decode())['items'])
-                object_count = len(json.loads(response.content.decode())['items'])
-                objects_counts.append(object_count)
+                try:
+                    response = requests.get(self.query, params=params)
+                    #print(json.loads(response.content.decode()))
+                    object_count = len(json.loads(response.content.decode())['items'])
+                    objects_counts.append(object_count)
+                except Exception as e:
+                    print('\n'.join(traceback.format_exception(*sys.exc_info())), flush=True)
 
         return objects_counts
 
@@ -35,14 +40,13 @@ class InfrastructureParser:
         iter_count = 0
         while iter_count < api_limit:
             buildings = self.db.get_flats()
-            parsed_info = []
+            parsed_info = {}
             for building in buildings:
                 objects_counts = self.parse(building)
-                parsed_info.append({building['id']: objects_counts})
+                parsed_info.update({building['id']: objects_counts})
                 print(parsed_info)
                 iter_count += len(self.objects) * len(radius_values)
             self.db.save_flats(parsed_info)
-            print(parsed_info)
 
 
 if __name__ == '__main__':

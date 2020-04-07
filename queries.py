@@ -21,15 +21,14 @@ class QueryMaker:
 
     def save_flats(self, parsed_info):
         query = """
-        UPDATE buildings 
-        SET schools_500m={}, schools_1000m={}, kindergartens_500m={}, kindergartens_1000m={}, 
-        clinics_500m={}, clinics_1000m={}, shops_500m={}, shops_1000m={} 
-        WHERE id={}
+        UPDATE buildings
+        SET schools_500m={}, schools_1000m={}, kindergartens_500m={}, kindergartens_1000m={},
+        clinics_500m={}, clinics_1000m={}, shops_500m={}, shops_1000m={}
+        WHERE id={};
         """
         for id, params in parsed_info.items():
             print(query.format(*params, id))
             self.cur.execute(query.format(*params, id))
-            print()
             print('SAVE OK')
-            print()
         self.conn.commit()
+        print('SUCCESS TRANSACTION')
