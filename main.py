@@ -47,6 +47,7 @@ class InfrastructureParser:
                 print(parsed_info, flush=True)
                 iter_count += len(self.objects) * len(radius_values)
             self.db.save_flats(parsed_info)
+            print('ITER COUNT', iter_count, flush=True)
 
 
 if __name__ == '__main__':
