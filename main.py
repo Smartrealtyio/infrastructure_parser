@@ -2,6 +2,7 @@ import requests
 import json
 import traceback
 import sys
+import time
 
 from settings_local import *
 from queries import QueryMaker
@@ -33,6 +34,7 @@ class InfrastructureParser:
                     objects_counts.append(object_count)
                 except Exception as e:
                     print('\n'.join(traceback.format_exception(*sys.exc_info())), flush=True)
+                time.sleep(1)
 
         return objects_counts
 
@@ -48,6 +50,7 @@ class InfrastructureParser:
                 iter_count += len(self.objects) * len(radius_values)
             self.db.save_flats(parsed_info)
             print('ITER COUNT', iter_count, flush=True)
+            time.sleep(2)
 
 
 if __name__ == '__main__':
