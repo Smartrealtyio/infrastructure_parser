@@ -15,7 +15,7 @@ class InfrastructureParser:
         self.objects = objects
 
     def parse(self, building):
-        print(building)
+        print(building, flush=True)
         objects_counts = []
         for object_type in self.objects:
             for radius_value in radius_values:
@@ -25,7 +25,7 @@ class InfrastructureParser:
                                                                  radius=radius_value),
                     'limit': 100
                 }
-                print(params)
+                # print(params)
                 try:
                     response = requests.get(self.query, params=params)
                     #print(json.loads(response.content.decode()))
@@ -44,7 +44,7 @@ class InfrastructureParser:
             for building in buildings:
                 objects_counts = self.parse(building)
                 parsed_info.update({building['id']: objects_counts})
-                print(parsed_info)
+                print(parsed_info, flush=True)
                 iter_count += len(self.objects) * len(radius_values)
             self.db.save_flats(parsed_info)
 
