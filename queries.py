@@ -1,6 +1,7 @@
 import psycopg2
+import time
 
-from settings_local import db_info, query_limit
+from settings_local import db_info, query_limit, sleep_timeout
 
 
 class QueryMaker:
@@ -17,6 +18,8 @@ class QueryMaker:
         buildings_coord = []
         for row in self.cur.fetchall():
             buildings_coord.append(dict(zip(columns, row)))
+        if len(buildings_coord) < query_limit:
+            time.sleep(sleep_timeout)
         return buildings_coord
 
     def save_flats(self, parsed_info):
