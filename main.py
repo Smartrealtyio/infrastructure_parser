@@ -16,7 +16,7 @@ class InfrastructureParser:
         self.objects = objects
 
     def parse(self, building):
-        print(building, flush=True)
+        # print(building, flush=True)
         objects_counts = []
         for object_type in self.objects:
             for radius_value in radius_values:

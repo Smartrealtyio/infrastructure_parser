@@ -27,7 +27,7 @@ class QueryMaker:
         WHERE id={};
         """
         for id, params in parsed_info.items():
-            print(query.format(*params, id), flush=True)
+            # print(query.format(*params, id), flush=True)
             self.cur.execute(query.format(*params, id))
             print('SAVE OK', flush=True)
         self.conn.commit()
