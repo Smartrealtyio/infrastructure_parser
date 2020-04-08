@@ -34,6 +34,7 @@ class InfrastructureParser:
                     objects_counts.append(object_count)
                 except Exception as e:
                     print('\n'.join(traceback.format_exception(*sys.exc_info())), flush=True)
+                    return False
                 # time.sleep(1)
 
         return objects_counts
@@ -45,8 +46,9 @@ class InfrastructureParser:
             parsed_info = {}
             for building in buildings:
                 objects_counts = self.parse(building)
-                parsed_info.update({building['id']: objects_counts})
-                print(parsed_info, flush=True)
+                if objects_counts:
+                    parsed_info.update({building['id']: objects_counts})
+                    print(parsed_info, flush=True)
                 iter_count += len(self.objects) * len(radius_values)
                 time.sleep(1)
             self.db.save_flats(parsed_info)
