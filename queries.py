@@ -19,6 +19,7 @@ class QueryMaker:
         for row in self.cur.fetchall():
             buildings_coord.append(dict(zip(columns, row)))
         if len(buildings_coord) < query_limit:
+            print('SLLEP', flush=True)
             time.sleep(sleep_timeout)
         return buildings_coord
 
